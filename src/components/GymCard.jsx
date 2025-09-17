@@ -1,8 +1,9 @@
 import React from 'react';
 import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom'; // <-- IMPORT Link
 
 const GymCard = ({ gym }) => {
-  const { name, image, address, rating, pricing, distance } = gym;
+  const { id, name, image, address, rating, pricing, distance } = gym;
 
   const getPricingColor = (level) => {
     switch (level) {
@@ -38,9 +39,9 @@ const GymCard = ({ gym }) => {
           <span className={`text-xs font-semibold inline-block py-1 px-3 uppercase rounded-full text-white ${getPricingColor(pricing)}`}>
             {pricing}
           </span>
-          <button className="text-sm font-semibold text-[#dc2626] hover:text-[#b91c1c] transition-colors">
+          <Link to={`/gym/${id}`} className="text-sm font-semibold text-[#dc2626] hover:text-[#b91c1c] transition-colors">
             View Details
-          </button>
+          </Link>
         </div>
       </div>
     </div>

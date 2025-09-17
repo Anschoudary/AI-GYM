@@ -59,7 +59,10 @@ function processBicepCurls(landmarks, state) {
       newStage = 'down';
       newFeedback = 'Extend Fully!';
     }
-  } catch (error) { /* Landmarks not visible */ }
+  } catch (error) {
+    // Landmarks not visible, skip processing
+    console.error("Error processing Bicep Curls:", error);
+  }
   
   return { ...state, stage: newStage, feedback: newFeedback, repCount: newRepCount };
 }
@@ -78,6 +81,8 @@ function processSquats(landmarks, state) {
     const rightHip = landmarks[POSE_LANDMARKS.RIGHT_HIP];
     const rightKnee = landmarks[POSE_LANDMARKS.RIGHT_KNEE];
     const rightAnkle = landmarks[POSE_LANDMARKS.RIGHT_ANKLE];
+    const leftShoulder = landmarks[POSE_LANDMARKS.LEFT_SHOULDER];
+    const rightShoulder = landmarks[POSE_LANDMARKS.RIGHT_SHOULDER];
 
     const kneeAngle = (calculateAngle(leftHip, leftKnee, leftAnkle) + calculateAngle(rightHip, rightKnee, rightAnkle)) / 2;
     const hipAngle = (calculateAngle(leftShoulder, leftHip, leftKnee) + calculateAngle(rightShoulder, rightHip, rightKnee)) / 2;
@@ -91,7 +96,10 @@ function processSquats(landmarks, state) {
       newStage = 'up';
       newFeedback = 'Stand Up Fully!';
     }
-  } catch (error) { /* Landmarks not visible */ }
+  } catch (error) { 
+    /* Landmarks not visible */
+    console.error("Error processing Squats:", error);
+  }
 
   return { ...state, stage: newStage, feedback: newFeedback, repCount: newRepCount };
 }
@@ -129,7 +137,10 @@ function processPushups(landmarks, state) {
       newStage = 'up';
       newFeedback = 'Lock Out!';
     }
-  } catch (error) { /* Landmarks not visible */ }
+  } catch (error) {
+    // Landmarks not visible, skip processing
+    console.error("Error processing Push-ups:", error);
+  }
 
   return { ...state, stage: newStage, feedback: newFeedback, repCount: newRepCount };
 }
@@ -155,7 +166,10 @@ function processPlank(landmarks, state) {
     } else {
       newFeedback = "Perfect Form! Hold it!";
     }
-  } catch (error) { /* Landmarks not visible */ }
+  } catch (error) {
+    // Landmarks not visible, skip processing
+    console.error("Error processing Plank:", error);
+  }
   
   // Rep count doesn't change for a plank.
   return { ...state, feedback: newFeedback };

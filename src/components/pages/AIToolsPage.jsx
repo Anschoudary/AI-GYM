@@ -14,19 +14,19 @@ const AIToolsPage = () => {
     setSelectedExercise(null); // Go back to the selection screen
   };
 
-  // If a workout is active, show the tracker
+  // --- THIS IS THE CRUCIAL CHANGE ---
+  // If a workout is active, render ONLY the PoseTracker component.
+  // We have removed the wrapper div.
   if (selectedExercise) {
     return (
-      <div className="bg-[#0a0a0a] min-h-screen py-12 flex items-center justify-center">
-        <PoseTracker
-          exercise={selectedExercise}
-          onWorkoutFinish={handleWorkoutFinish}
-        />
-      </div>
+      <PoseTracker
+        exercise={selectedExercise}
+        onWorkoutFinish={handleWorkoutFinish}
+      />
     );
   }
 
-  // Otherwise, show the selection screen
+  // Otherwise, show the normal selection screen with its own padding and layout
   return (
     <div className="bg-[#0a0a0a] min-h-screen py-12">
       <div className="container mx-auto px-6">

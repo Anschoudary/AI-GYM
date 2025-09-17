@@ -1,12 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components/context/AuthContext'; // Import AuthProvider
+// --- NEW: Import useLocation ---
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
-// Global components (present on almost all pages)
+// --- CORRECTED IMPORT PATHS to match your project structure ---
+import { AuthProvider } from './components/context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-
-// Page components
 import HomePage from './components/pages/HomePage';
 import LoginPage from './components/pages/LoginPage';
 import SignupPage from './components/pages/SignupPage';
@@ -15,38 +14,51 @@ import AllGymsPage from './components/pages/AllGymsPage';
 import AIToolsPage from './components/pages/AIToolsPage';
 import BlogsPage from './components/pages/BlogsPage';
 import ContactPage from './components/pages/ContactPage';
+import GymPage from './components/pages/GymPage';
 
+
+// --- NEW: The AppContent wrapper that contains our layout and logic ---
+// This component can use the useLocation hook because it's inside <Router>
+const AppContent = () => {
+  const location = useLocation();
+  // We are in "focus mode" if the path is exactly '/aitools'
+  const isAiToolsPage = location.pathname === '/aitools';
+
+  return (
+    <div className="bg-[#0a0a0a] min-h-screen flex flex-col">
+      {/* Conditionally render Navbar only if we are NOT on the AI tools page */}
+      {!isAiToolsPage && <Navbar />}
+
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/gyms" element={<AllGymsPage />} />
+          <Route path="/aitools" element={<AIToolsPage />} />
+          <Route path="/blogs" element={<BlogsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/gym/:id" element={<GymPage />} />
+        </Routes>
+      </main>
+
+      {/* Conditionally render Footer only if we are NOT on the AI tools page */}
+      {!isAiToolsPage && <Footer />}
+    </div>
+  );
+};
+
+
+// The main App component is now simpler. It just sets up the providers and router.
 function App() {
   return (
     <Router>
-      <AuthProvider> {/* Wrap the entire app with AuthProvider */}
-        <div className="bg-[#0a0a0a] min-h-screen flex flex-col"> {/* Use flex-col for sticky footer */}
-          <Navbar /> {/* Navbar stays outside Routes to be present on all pages */}
-          <main className="flex-grow"> {/* Main content grows to push footer down */}
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/gyms" element={<AllGymsPage />} />
-              <Route path="/aitools" element={<AIToolsPage />} />
-              <Route path="/blogs" element={<BlogsPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-            </Routes>
-          </main>
-          <Footer /> {/* Footer stays outside Routes to be present on all pages */}
-        </div>
+      <AuthProvider>
+        <AppContent />
       </AuthProvider>
     </Router>
   );
 }
-
-// Create a simple ContactPage placeholder for now
-// const ContactPage = () => (
-//   <div className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] flex items-center justify-center">
-//     <h1 className="text-4xl font-bold">Contact Us Page (Content from HomePage's Contact section)</h1>
-//   </div>
-// );
-
 
 export default App;
